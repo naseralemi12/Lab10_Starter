@@ -2,46 +2,78 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-  <title>Lab 10 - Return of the Party Horn</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <title>Lab 10 - Return of the Party Horn</title>
 
-  <!-- JS Confetti -->
-  <script src="assets/scripts/js-confetti.browser.js"></script>
+    <!-- JS Confetti -->
+    <script src="assets/scripts/js-confetti.browser.js"></script>
 
-  <!-- Main Stylesheet & Scripts -->
-  <link rel="stylesheet" href="assets/styles/global.css" />
-  <script src="assets/scripts/partyHorn.js" type="module"></script>
+    <!-- Main Stylesheet & Scripts -->
+    <link rel="stylesheet" href="assets/styles/global.css" />
+    <script src="assets/scripts/partyHorn.js" type="module"></script>
+    <script src="https://unpkg.com/launchdarkly-js-client-sdk@2"></script>
 </head>
 
 <body>
-  <header>
-    <nav>
-      <a href="speechSynth.html" title="Go to speech synthesizer">Speech Synthesizer</a>
-    </nav>
-  </header>
-  <main>
-    <section id="expose">
-      <header>
-        <h2>Return of the Party Horn</h2>
-      </header>
-      <img src="assets/images/no-image.png" alt="No image selected" />
-      <select name="horn" id="horn-select">
+    <header>
+        <nav>
+            <a href="speechSynth.html" title="Go to speech synthesizer">Speech Synthesizer</a>
+        </nav>
+    </header>
+    <main>
+        <section id="expose">
+            <header>
+                <h2>Return of the Party Horn</h2>
+            </header>
+            <img src="assets/images/no-image.png" alt="No image selected" />
+            <select name="horn" id="horn-select">
         <option value="select" disabled selected>Select Horn:</option>
         <option value="air-horn">Air Horn</option>
         <option value="car-horn">Car Horn</option>
         <option value="party-horn">Party Horn</option>
       </select>
-      <div id="volume-controls">
-        <input type="range" name="volume" id="volume" value="50" min="0" max="100" step="1" />
-        <img src="assets/icons/volume-level-2.svg" alt="Volume level 2" />
-      </div>
-      <button>Play Sound</button>
-      <audio class="hidden" src=""></audio>
-    </section>
-  </main>
+            <div id="volume-controls">
+                <input type="range" name="volume" id="volume" value="50" min="0" max="100" step="1" />
+                <img src="assets/icons/volume-level-2.svg" alt="Volume level 2" />
+            </div>
+            <button>Play Sound</button>
+            <audio class="hidden" src=""></audio>
+        </section>
+    </main>
+    <script>
+        // Set up the user properties. This user should appear on your LaunchDarkly users dashboard
+        // soon after you run the demo.
+        var user = {
+            name: 'Bob Loblaw',
+            key: 'example-user-key',
+        };
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const charactersLength = characters.length;
+        for (let i = 0; i < 26; i++) {
+            user.key += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        // Create a new LDClient instance with your environment-specific SDK key
+        var ldclient = LDClient.initialize('638e7d95a048cf113449c2be', user);
+
+
+        function render() {
+
+
+            var flagValue = ldclient.variation('blue-background', false);
+
+            console.log("SDK successfully connected! The value of blue-background is " + flagValue + " for " + user.key)
+            if (flagValue) {
+                document.querySelector('body').classList.add("blue");
+                flagValue = false;
+            }
+        }
+
+        ldclient.on('ready', render);
+        ldclient.on('change', render);
+    </script>
 </body>
 
 </html>
