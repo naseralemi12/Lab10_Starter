@@ -2,36 +2,73 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-  <title>Lab 5 - Party Horn</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 
-  <!-- Main Stylesheet & Scripts -->
-  <link rel="stylesheet" href="assets/styles/global.css" />
-  <script src="assets/scripts/speechSynth.js" type="module"></script>
+    <title>Lab 5 - Party Horn</title>
+
+    <!-- Main Stylesheet & Scripts -->
+    <link rel="stylesheet" href="assets/styles/global.css" />
+    <script src="assets/scripts/speechSynth.js" type="module"></script>
+    <script src="https://unpkg.com/launchdarkly-js-client-sdk@2"></script>
 </head>
 
 <body>
-  <header>
-    <nav>
-      <a href="index.html" title="Go to  party horn">Party Horn</a>
-    </nav>
-  </header>
-  <main>
-    <section id="explore">
-      <header>
-        <h2>Speech Synthesizer</h2>
-      </header>
-      <img src="assets/images/smiling.png" alt="Smiling face" />
-      <textarea name="text-to-speak" id="text-to-speak" rows="10" placeholder="Text to speak here"></textarea>
-      <select name="voice" id="voice-select">
+    <header>
+        <nav>
+            <a href="index.html" title="Go to  party horn">Party Horn</a>
+        </nav>
+
+    </header>
+    <main>
+        <section id="explore">
+            <header>
+                <h2>Speech Synthesizer</h2>
+            </header>
+            <img src="assets/images/smiling.png" alt="Smiling face" />
+            <textarea name="text-to-speak" id="text-to-speak" rows="10" placeholder="Text to speak here"></textarea>
+            <select name="voice" id="voice-select">
         <option value="select" disabled selected>Select Voice:</option>
       </select>
-      <button>Press to Talk</button>
-    </section>
-  </main>
+            <button>Press to Talk</button>
+        </section>
+    </main>
+    <script>
+        // Set up the user properties. This user should appear on your LaunchDarkly users dashboard
+        // soon after you run the demo.
+        var user = {
+            name: 'Adam Alemi',
+            key: 'example-user-key',
+        };
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const charactersLength = characters.length;
+        for (let i = 0; i < 26; i++) {
+            user.key += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        // Create a new LDClient instance with your environment-specific SDK key
+        var ldclient = LDClient.initialize('638e7d95a048cf113449c2be', user);
+
+
+        function render() {
+
+
+            var flagValue = ldclient.variation('black-elements-background-white-text', false);
+
+            console.log("SDK successfully connected! The value of black-button-background is " + flagValue + " for " + user.key)
+            if (flagValue) {
+                document.querySelector('#explore > textarea').classList.add("black");
+                document.querySelector('button').classList.add("black");
+                document.querySelector('select').classList.add("black");
+
+                flagValue = false;
+            }
+        }
+
+        ldclient.on('ready', render);
+        ldclient.on('change', render);
+    </script>
 </body>
 
 </html>
