@@ -9,6 +9,9 @@ This app allows you to choose either a horn, or a car or a party sound and it wi
 - Example API endpoints for retrieving and adding data
 - Basic HTML and CSS for a simple front-end
 - Text to speech feature or speech senthesis
+- when the text is being read by the speech, the imoji mouth moves as well
+- its fully responsive
+- apis are used for the conffetti, speech, voice and other features
 
 
 ## Installation
