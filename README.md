@@ -1,5 +1,5 @@
 
-## <VIdeo Demo https://youtube.com/shorts/UzuHw0_W7IA>
+## VIdeo Demo <https://youtube.com/shorts/UzuHw0_W7IA>
 
 # Lab 10 - Starter
 https://naseralemi12.github.io/Lab10_Starter/
